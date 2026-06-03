@@ -1,0 +1,7 @@
+# .dockerignore
+.git
+.env
+db_data/
+backups/
+vendor/
+.dockerignore

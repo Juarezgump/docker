@@ -1,0 +1,45 @@
+services:
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./db_data:/var/lib/mysql
+    networks:
+      - lab-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  php-app:
+    build: .
+    restart: unless-stopped
+    container_name: php-lab
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - lab-net
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - lab-net
+
+networks:
+  lab-net:
+    driver: bridge

@@ -1,0 +1,6 @@
+# Base de datos y logs
+db_data/
+vendor/
+.env
+*.log
+.DS_Store
