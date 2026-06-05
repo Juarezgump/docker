@@ -61,4 +61,16 @@ class MensajeManager {
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Actualiza el contenido de un mensaje existente en la base de datos.
+     *
+     * @param int $id El identificador único del mensaje a actualizar.
+     * @param string $texto El nuevo contenido del mensaje.
+     * @return void
+     */
+    public function actualizar($id, $texto) {
+        $stmt = $this->pdo->prepare("UPDATE mensajes SET texto = :texto WHERE id = :id");
+        $stmt->execute(['id' => $id, 'texto' => $texto]);
+    }
 }
